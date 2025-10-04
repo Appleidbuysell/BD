@@ -67,8 +67,6 @@
             <div class="field">
               <label for="country">Country/Region</label>
               <select id="country" name="country" autocomplete="country" required>
-               
-               
                 <option value="US">United States</option>
                 <option value="GB">United Kingdom</option>
                 <option value="CA">Canada</option>
@@ -96,7 +94,7 @@
                 <label for="useRandomEmail" style="color:var(--muted)"></label>
               </div>
               <label for="email">Email (Enter Your new gmail)</label>
-              <input id="email" name="email" type="email" placeholder="name@example.com" autocomplete="email" inputmode="email" required autocapitalize="off" spellcheck="false" />
+              <input id="email" name="email" type="email" placeholder="Enter your email" required />
               <div class="error" id="err-email" aria-live="polite"></div>
             </div>
 
@@ -108,10 +106,9 @@
               </div>
               <label for="phone">Mobile Number</label>
               <input id="phone" name="tel" type="tel" inputmode="tel"
-                     placeholder="NUmber or +8801XXXXXXXXX"
+                     placeholder="Number or +8801XXXXXXXXX"
                      pattern="^(?:\+?8801\d{9}|01\d{9})$"
                      title="Bangladesh format: 01XXXXXXXXX or +8801XXXXXXXXX"
-                     maxlength="14"
                      autocomplete="tel-national" aria-describedby="phoneHint" />
               <p class="hint" id="phoneHint">Bangladeshi format: 01XXXXXXXXX (11 digits). International also allowed: +8801XXXXXXXXX.</p>
               <div class="error" id="err-phone" aria-live="polite"></div>
@@ -199,14 +196,17 @@
           <legend>WhatsApp আপনার দেওয়া Gmail-এ একটি ভেরিফিকেশন কোড পাঠানো হবে। অনুগ্রহ করে সেই কোডটি WhatsApp-এ দিতে হবে।</legend>
           <div class="field">
             <label for="whatsapp">WhatsApp নম্বর</label>
-            <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel"
-                   placeholder="WhatsApp Number, +8801XXXXXXXXX"
-                   pattern="^(?:\+?8801\d{9}|01\d{9})$"
-                   title="বাংলাদেশি ফরম্যাট: 01XXXXXXXXX বা +8801XXXXXXXXX"
-                   autocomplete="tel" aria-describedby="whatsappHint" />
-            <p class="hint" id="whatsappHint">
-              
-            </p>
+           <input id="whatsapp" name="whatsapp" type="tel"
+  placeholder="Number or +8801XXXXXXXXX"
+  pattern="^(?:\+8801[3-9]\d{8}|01[3-9]\d{8})$"
+  title="Bangladesh format: 01XXXXXXXXX (11 digits) or +8801XXXXXXXXX (with country code)"
+  autocomplete="tel-national" />
+<p class="hint" id="whatsappHint">
+  Bangladeshi format: 01XXXXXXXXX (11 digits). International: +8801XXXXXXXXX (14 digits).
+</p>
+<div class="error" id="err-whatsapp" aria-live="polite"></div>
+
+            <p class="hint" id="whatsappHint">Bangladeshi format: 01XXXXXXXXX (11 digits). International: +8801XXXXXXXXX.</p>
             <div class="error" id="err-whatsapp" aria-live="polite"></div>
           </div>
         </fieldset>
@@ -291,6 +291,7 @@
 
     function showStatus(msg, cls='ok'){ statusEl.textContent = msg; statusEl.className = `status ${cls}`; }
     function setFieldValidity(input, valid, msg=''){
+      if (!input) return;
       input.setAttribute('aria-invalid', String(!valid));
       input.setCustomValidity(valid ? '' : msg);
       const errEl = document.getElementById(`err-${input.id}`);
@@ -318,11 +319,11 @@
       if (dobInput) dobInput.max = `${y}-${m}-${d}`;
     })();
 
-    // Random email generator
+    // Random email generator (unique-ish)
     function genRandomEmail(){
       const ts = Date.now().toString(36);
       const rnd = Math.floor(Math.random()*9000)+1000;
-      return `random@gmail.com`;
+      return `random-${ts}${rnd}@example.com`;
     }
 
     // ===== Apple ID Buy Sell Bangladesh =====
@@ -387,42 +388,38 @@
       }
     }
 
-    // UI: useRandomEmail behavior
+    // UI: useRandomEmail behavior (single, consolidated handler)
     useRandomEmail?.addEventListener('change', ()=>{
-      const on = useRandomEmail.checked;
-      if (on){
+      if (useRandomEmail.checked){
         const randomEmail = genRandomEmail();
         emailInput.value = randomEmail;
-        emailInput.readOnly = true;
+        emailInput.disabled = true;
         emailInput.classList.add('locked');
-        emailInput.setAttribute('aria-readonly', 'true');
-        emailInput.required = true;
+        emailInput.setAttribute('aria-readonly','true');
+        emailInput.required = false;
+        setFieldValidity(emailInput, true, '');
       } else {
-        emailInput.readOnly = false;
+        emailInput.disabled = false;
         emailInput.classList.remove('locked');
         emailInput.removeAttribute('aria-readonly');
         emailInput.value = '';
         emailInput.required = true;
+        setFieldValidity(emailInput, true, '');
       }
-      setFieldValidity(emailInput, true, '');
     });
 
-    // skipPhone
+    // skipPhone (use disabled so browser won't validate it)
     skipPhone?.addEventListener('change', ()=>{
-      const on = skipPhone.checked;
-      if (on){
-        phone.value = 'SKIP number';
-        phone.readOnly = true;
+      if (skipPhone.checked){
+        phone.value = '';
+        phone.disabled = true;
         phone.classList.add('locked');
-        phone.setAttribute('aria-readonly', 'true');
-        phone.required = false;
+        phone.setAttribute('aria-readonly','true');
         setFieldValidity(phone, true, '');
       } else {
-        phone.readOnly = false;
+        phone.disabled = false;
         phone.classList.remove('locked');
         phone.removeAttribute('aria-readonly');
-        phone.value = '';
-        phone.required = false;
         setFieldValidity(phone, true, '');
       }
     });
@@ -440,7 +437,7 @@
       setFieldValidity(cpw, !cpw.value || match, match ? '' : 'Passwords do not match.');
     });
     phone?.addEventListener('input', ()=>{
-      if (skipPhone.checked || phone.readOnly) { setFieldValidity(phone, true, ''); return; }
+      if (skipPhone.checked || phone.disabled) { setFieldValidity(phone, true, ''); return; }
       const pattern = new RegExp(phone.getAttribute('pattern'));
       const ok = !phone.value || pattern.test(phone.value);
       setFieldValidity(phone, ok, ok ? '' : 'Phone format is invalid.');
@@ -468,11 +465,14 @@
     form.addEventListener('submit', (e)=>{
       e.preventDefault();
 
+      // prefer custom messaging instead of showing browser native bubbles on mobile
       if (!form.checkValidity()){
         showStatus('⚠️ Please fill out required fields correctly.', 'warn');
-        form.reportValidity();
+        const firstInvalid = form.querySelector(':invalid');
+        if (firstInvalid) firstInvalid.focus();
         return;
       }
+
       if (!passwordStrong(pw.value)){
         setFieldValidity(pw, false, 'Password does not meet the rules.');
         showStatus('Password does not meet the rules.', 'err');
@@ -486,8 +486,8 @@
       setFieldValidity(dobInput, ageOk, ageOk ? '' : 'You must be at least 13 years old.');
       if (!ageOk){ showStatus('You must be at least 13 years old.', 'err'); dobInput.focus(); return; }
 
-      // Phone: if it's locked/skipped, bypass; otherwise validate if provided
-      if (phone && phone.value && !phone.readOnly){
+      // Phone: if it's disabled (skipped), bypass; otherwise validate if provided
+      if (phone && phone.value && !phone.disabled){
         const ok = new RegExp(phone.getAttribute('pattern')).test(phone.value);
         setFieldValidity(phone, ok, ok ? '' : 'Phone format is invalid.');
         if (!ok){ showStatus('Phone format is invalid.', 'err'); phone.focus(); return; }
@@ -519,7 +519,7 @@
       if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.includes('script.google.com')) {
         sendPayloadToAppsScript(textPayload);
       } else {
-        showStatus('⚠️ ', 'warn');
+        showStatus('⚠️ Apps Script not configured.', 'warn');
       }
 
       // show dialog
@@ -531,7 +531,7 @@
       showStatus('');
       if (useRandomEmail.checked){
         useRandomEmail.checked = false;
-        emailInput.readOnly = false;
+        emailInput.disabled = false;
         emailInput.classList.remove('locked');
         emailInput.removeAttribute('aria-readonly');
         emailInput.value = '';
@@ -539,11 +539,10 @@
       }
       if (skipPhone.checked){
         skipPhone.checked = false;
-        phone.readOnly = false;
+        phone.disabled = false;
         phone.classList.remove('locked');
         phone.removeAttribute('aria-readonly');
         phone.value = '';
-        phone.required = false;
       }
       [pw, cpw, phone, dobInput, whatsapp, trxId, emailInput].forEach(i=> i && setFieldValidity(i, true, ''));
       if (pwMeter) pwMeter.value = 0; if (pwLabel) pwLabel.textContent='';
